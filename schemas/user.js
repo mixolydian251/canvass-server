@@ -11,12 +11,12 @@ const user = `
     id: String!
     username: String!
     email: String!
-    categories: [Category!]
+    categories: [CategoryResponse!]
   }
   
   type Query {
     me: UserResponse!
-    getUserByUsername(userName: String!): User!
+    getUserByUsername(userName: String!): UserResponse!
   }
   
   type RegisterResponse {

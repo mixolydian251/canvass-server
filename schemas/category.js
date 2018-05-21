@@ -5,6 +5,12 @@ const category = `
     canvass_ids: [String!]
   }
   
+  type CategoryResponse {
+    id: String!
+    name: String!
+    canvasses: [CanvassPreview!]
+  }
+  
   type Query {
     allCategories: [Category!]
   }

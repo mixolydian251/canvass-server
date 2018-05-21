@@ -8,27 +8,49 @@ export default {
   Query: {
     me: async (parent, args, { models, user }) => {
       const { id, username, email, category_ids} = await models.User.findOne({ id: user.id });
-      const categories = await category_ids.map((category_id) => models.Category.findOne({ id: category_id }));
+
+      const categories = await category_ids.map( async (category_id) => {
+        const { id, name, canvass_ids } = await models.Category.findOne({id: category_id});
+        const canvasses = canvass_ids.map( async (canvass_id) => {
+          const {
+            id,
+            title,
+            category_id,
+            creator_id,
+            options,
+            comment_ids
+          } = await models.Canvass.findOne({ id: canvass_id });
+          const creator = await models.User.findOne({ id: creator_id });
+          return { id, title, category_id, creator, options, comment_ids }
+        });
+
+        return { id, name, canvasses}
+      });
+
       return { id, username, email, categories }
     },
     getUserByUsername: async (parent, { userName }, { models }) => {
-      const {
-        id,
-        username,
-        email,
-        password,
-        category_ids
-      } = await models.User.findOne({ username: userName });
+      const { id, username, email, category_ids} = await models.User.findOne({ username: userName });
 
-      const categories = await category_ids.map((category_id) => models.User.findOne({ id: category_id }));
+      const categories = await category_ids.map( async (category_id) => {
+        const { id, name, canvass_ids } = await models.Category.findOne({id: category_id});
+        const canvasses = canvass_ids.map( async (canvass_id) => {
+          const {
+            id,
+            title,
+            category_id,
+            creator_id,
+            options,
+            comment_ids
+          } = await models.Canvass.findOne({ id: canvass_id });
+          const creator = await models.User.findOne({ id: creator_id });
+          return { id, title, category_id, creator, options, comment_ids }
+        });
 
-      return {
-        id,
-        username,
-        email,
-        password,
-        categories
-      }
+        return { id, name, canvasses}
+      });
+
+      return { id, username, email, categories }
     }
   },
   Mutation: {

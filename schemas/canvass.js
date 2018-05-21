@@ -14,10 +14,19 @@ const canvass = `
     getCanvassById(canvassId: String!): CanvassResponse!
   }
   
+  type CanvassPreview {
+    id: String!
+    title: String!
+    category_id: String!
+    creator: User!
+    options: [Option!]
+    comment_ids: [String!]
+  }
+  
   type CanvassResponse {
     id: String!
     title: String!
-    category: Category
+    category: Category!
     creator: User!
     options: [OptionResponse!]
     comments: [CommentResponse!]
