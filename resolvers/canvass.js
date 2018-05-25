@@ -51,10 +51,10 @@ export default {
   },
   Mutation: {
 
-    createCanvass: async (parent, {title, categoryId, creatorId, canvassOptions}, { models }) => {
+    createCanvass: async (parent, {title, categoryId, canvassOptions}, { models, user }) => {
       try {
         const id = uuid();
-        const user = await models.User.findOne({ id: creatorId });
+        const creator = await models.User.findOne({ id: user.id });
         const options = canvassOptions.map((text) => ({ text, id: uuid(),  voter_ids: [] }));
 
         const category = await models.Category.findOneAndUpdate({ id: categoryId }, {
@@ -65,7 +65,7 @@ export default {
           id,
           title,
           options,
-          creator_id: user.id,
+          creator_id: creator.id,
           category_id: category.id ,
         });
 
@@ -76,12 +76,44 @@ export default {
 
       } catch (error) {
 
+        console.log(error);
+
         return {
           ok: false,
-          errors: formatErrors(error, models)
+          errors: error.toString()
         }
       }
     },
+
+    vote: async (parent, { canvassId, optionId }, { models, user }) => {
+      try {
+        const { id } = await models.User.findOne({ id: user.id });
+        const canvass = await models.Canvass.findOne({ id: canvassId });
+
+        canvass.options.forEach((option) => {
+          if (option.id === optionId && !option.voter_ids.includes(id)){
+            option.voter_ids = option.voter_ids.concat(id)
+          } else {
+            if( option.voter_ids.includes(id) ){
+              option.voter_ids = option.voter_ids.filter((option) => option !== id)
+            }
+          }
+        });
+
+        await canvass.save();
+
+        return {
+          ok: true,
+          options: canvass.options
+        };
+
+      } catch (err) {
+        console.log(err);
+        return {
+          ok: false
+        };
+      }
+    }
   }
 }
 

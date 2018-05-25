@@ -9,9 +9,6 @@ export default {
     me: async (parent, args, { models, user }) => {
       const { id, username, email, category_ids} = await models.User.findOne({ id: user.id });
 
-      console.log(id, username, email, category_ids);
-
-
       const categories = await category_ids.map( async (category_id) => {
         const { id, name, canvass_ids } = await models.Category.findOne({id: category_id});
         const canvasses = canvass_ids.map( async (canvass_id) => {

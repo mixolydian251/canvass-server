@@ -17,7 +17,6 @@ const option = `
   
   type Mutation {
     addOption(text: String!, canvassId: String!): Boolean!
-    vote(canvassId: String!, optionId: String!, username: String!): Boolean!
   }
 `;
 

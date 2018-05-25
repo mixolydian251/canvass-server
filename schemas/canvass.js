@@ -41,16 +41,22 @@ const canvass = `
   type CreateCanvassResponse {
     ok: Boolean!
     canvass: Canvass
-    errors: [Error!]
+    errors: [String!]
+  }
+  
+  type VoteResponse {
+    ok: Boolean!
+    options: [CanvassOption!]!
   }
   
   type Mutation {
     createCanvass(
       title: String!, 
       categoryId: String!, 
-      creatorId: String!
-      canvassOptions: [String!]
+      canvassOptions: [String!]!
     ): CreateCanvassResponse!
+    
+    vote(canvassId: String!, optionId: String!): VoteResponse!
     
     changeTitle(text: String!, canvassTitle: String!): Boolean!
   }

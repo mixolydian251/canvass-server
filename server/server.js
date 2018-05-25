@@ -10,7 +10,6 @@ import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import models from '../mongo/models';
 import { refreshTokens } from '../authentication/auth';
 
-
 const db = mongoose.connect('mongodb://localhost:27017/Canvass');
 
 const SECRET = 'asiodfhoi1hoi23jnl1kejd';
@@ -61,17 +60,20 @@ const graphqlEndpoint = '/graphql';
 app.use(
   graphqlEndpoint,
   bodyParser.json(),
-  graphqlExpress( req => ({
-    schema,
-    context: {
-      models,
-      user: req.user,
-      SECRET,
-      SECRET2,
-    },
-  })),
+  graphqlExpress( req => {
+
+    console.log(req.user);
+    return ({
+      schema,
+      context: {
+        models,
+        user: req.user,
+        SECRET,
+        SECRET2,
+      },
+    })
+  }),
 );
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: graphqlEndpoint }));
 app.listen(8081);
-
