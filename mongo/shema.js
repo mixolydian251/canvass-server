@@ -49,7 +49,7 @@ export const optionSchema = mongoose.Schema({
   },
   text: {
     type: String,
-    required: true
+    required: true,
   },
   voter_ids: [ String ]
 });

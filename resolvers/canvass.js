@@ -50,29 +50,36 @@ export default {
     }
   },
   Mutation: {
-    createCanvass: async (parent, {title, categoryName, creatorUsername}, { models }) => {
+
+    createCanvass: async (parent, {title, categoryId, creatorId, canvassOptions}, { models }) => {
       try {
         const id = uuid();
-        const user = await models.User.findOne({ username: creatorUsername });
+        const user = await models.User.findOne({ id: creatorId });
+        const options = canvassOptions.map((text) => ({ text, id: uuid(),  voter_ids: [] }));
 
-
-
-        const category = await models.Category.findOneAndUpdate({ name: categoryName }, {
+        const category = await models.Category.findOneAndUpdate({ id: categoryId }, {
           $push: { canvass_ids: id }
         });
 
-        await models.Canvass.create({
+        const canvass = await models.Canvass.create({
           id,
           title,
+          options,
           creator_id: user.id,
           category_id: category.id ,
         });
 
-        return true;
+        return {
+          ok: true,
+          canvass
+        };
 
       } catch (error) {
-        console.log(error);
-        return false;
+
+        return {
+          ok: false,
+          errors: formatErrors(error, models)
+        }
       }
     },
   }

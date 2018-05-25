@@ -4,8 +4,14 @@ const canvass = `
     title: String!
     category_id: String!
     creator_id: String!
-    options: [Option!]
+    options: [CanvassOption!]
     comment_ids: [String!]
+  }
+  
+  type CanvassOption {
+    id: String!
+    text: String!
+    voter_ids: [String!]
   }
   
   type Query {
@@ -39,7 +45,13 @@ const canvass = `
   }
   
   type Mutation {
-    createCanvass(title: String!, categoryName: String!, creatorUsername: String!): Boolean!
+    createCanvass(
+      title: String!, 
+      categoryId: String!, 
+      creatorId: String!
+      canvassOptions: [String!]
+    ): CreateCanvassResponse!
+    
     changeTitle(text: String!, canvassTitle: String!): Boolean!
   }
 `;

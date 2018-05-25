@@ -5,7 +5,7 @@ import uuid from 'uuid';
 export default {
   Query: {
     allCategories: async (parent, args, { models }) => (
-      await models.Category.findAll()
+      await models.Category.find()
     )
   },
   Mutation: {

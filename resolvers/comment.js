@@ -56,20 +56,20 @@ export default {
     },
   },
   Mutation: {
-    createComment: async (parent, { text, creatorId, canvassId}, { models, user }) => {
+    createComment: async (parent, { text, canvassId, userId}, { models, user }) => {
       try {
         const id = uuid();
 
         await models.Comment.create({
           id,
           text,
-          creator_id: creatorId,
+          creator_id: userId,
           created_at: Number(Date.now())
         });
 
         await models.Canvass.update({ id: canvassId }, {
           $push: {
-            comments: id
+            comment_ids: id
           }
         });
 
