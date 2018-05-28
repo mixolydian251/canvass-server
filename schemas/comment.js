@@ -3,7 +3,7 @@ const comment = `
     id: String!
     text: String!
     creator_id: String!
-    created_at: Int!
+    created_at: Float!
     reply_ids: [String!]
   }
   
@@ -15,7 +15,7 @@ const comment = `
   type CommentResponse {
     id: String!
     text: String!
-    created_at: Int!
+    created_at: Float!
     creator: User!
     replies: [CommentResponse!]
   }
