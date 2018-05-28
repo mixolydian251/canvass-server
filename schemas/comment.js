@@ -27,8 +27,8 @@ const comment = `
   }
   
   type Mutation {
-    createComment(text: String!, canvassId: String!, userId: String!): Boolean!
-    createReply(text: String!, commentId: String!, creatorUsername: String!): Boolean!
+    createComment(text: String!, canvassId: String!): CreateCommentResponse!
+    createReply(text: String!, commentId: String!): Boolean!
   }
 `;
 

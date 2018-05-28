@@ -61,8 +61,6 @@ app.use(
   graphqlEndpoint,
   bodyParser.json(),
   graphqlExpress( req => {
-
-    console.log(req.user);
     return ({
       schema,
       context: {

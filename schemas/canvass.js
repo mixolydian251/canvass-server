@@ -18,6 +18,7 @@ const canvass = `
     getCanvasses: [Canvass!]
     getCanvassesByCategory(category: String!): [Canvass!]
     getCanvassById(canvassId: String!): CanvassResponse!
+    getOptionsByCanvass(canvassId: String!): [CanvassOption!]!
   }
   
   type CanvassPreview {

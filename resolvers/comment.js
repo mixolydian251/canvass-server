@@ -5,20 +5,20 @@ import uuid from 'uuid';
 export default {
   Query: {
     getComments: async (parent, { canvassId }, { models }) => {
-      const canvass = await models.Canvass.find({id: canvassId});
+      const canvass = await models.Canvass.findOne({id: canvassId});
 
-      const comments = canvass.comment_ids.map( async (comment_id) => {
+      return canvass.comment_ids.map(async (comment_id) => {
         const {
           id,
           text,
           created_at,
           creator_id,
           reply_ids
-        } = await models.Comment.findOne({ id: comment_id });
+        } = await models.Comment.findOne({id: comment_id});
 
-        const creator = await models.User.findOne({ id: creator_id});
+        const creator = await models.User.findOne({id: creator_id});
 
-        const replies = reply_ids.map((reply_id) => models.Comment.findOne({ id: reply_id}));
+        const replies = reply_ids.map((reply_id) => models.Comment.findOne({id: reply_id}));
 
         return {
           id,
@@ -56,14 +56,14 @@ export default {
     },
   },
   Mutation: {
-    createComment: async (parent, { text, canvassId, userId}, { models, user }) => {
+    createComment: async (parent, { text, canvassId }, { models, user }) => {
       try {
         const id = uuid();
 
-        await models.Comment.create({
+        const comment = await models.Comment.create({
           id,
           text,
-          creator_id: userId,
+          creator_id: user.id,
           created_at: Number(Date.now())
         });
 
@@ -73,22 +73,26 @@ export default {
           }
         });
 
-        return true;
+        return {
+          ok: true,
+          comment
+        };
       } catch (error) {
         console.log(error);
-        return false
+        return {
+          ok: false
+        }
       }
     },
 
-    createReply: async (parent, { text, creatorUsername, commentId }, { models, user }) => {
+    createReply: async (parent, { text, commentId }, { models, user }) => {
       try {
         const id = uuid();
-        const creator = models.User.find({ username: creatorUsername });
 
         const comment = await models.Comment.create({
           id,
           text,
-          creator_id: creator.id,
+          creator_id: user.id,
           created_at: Number(Date.now())
         });
 

@@ -47,6 +47,10 @@ export default {
       });
 
       return { id, title, options, comments, category, creator };
+    },
+    getOptionsByCanvass: async (parent, { canvassId }, { models }) => {
+      const { options } = await models.Canvass.findOne({ id: canvassId });
+      return options
     }
   },
   Mutation: {
